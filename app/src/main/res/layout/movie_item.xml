@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/image_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/movie_image"
+            android:layout_width="60dp"
+            android:layout_height="100dp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="电影名称"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toEndOf="@+id/image_card_view"
+        app:layout_constraintTop_toTopOf="@+id/image_card_view" />
+
+    <TextView
+        android:id="@+id/actor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="主演"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintVertical_bias="0.111" />
+
+    <TextView
+        android:id="@+id/movie_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="类型"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toEndOf="@+id/name"
+        app:layout_constraintTop_toTopOf="@+id/name"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/movie_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="地区"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toEndOf="@+id/image_card_view"
+        app:layout_constraintTop_toBottomOf="@+id/actor"
+        app:layout_constraintVertical_bias="0.448" />
+
+    <TextView
+        android:id="@+id/movie_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="语言"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.074"
+        app:layout_constraintStart_toEndOf="@+id/movie_area"
+        app:layout_constraintTop_toBottomOf="@+id/actor"
+        app:layout_constraintVertical_bias="0.448" />
+
+    <TextView
+        android:id="@+id/movie_len"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时长"
+        app:layout_constraintBottom_toBottomOf="@+id/movie_language"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.121"
+        app:layout_constraintStart_toEndOf="@+id/movie_language"
+        app:layout_constraintTop_toTopOf="@+id/movie_language"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="80dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="16dp"
+        android:text="购票"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
