@@ -2,10 +2,7 @@ package com.xupt.ttms.util.retrofit
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -27,8 +24,8 @@ object RetrofitManager {
 
     private val okHttpClientService = OkHttpClient.Builder().addInterceptor { chain ->
         val response = chain.proceed(chain.request())
-        val token = response.header("token", "nihao")
-        Log.d("TAG", "gettoken: $token")
+        val token = response.header("token", "")
+        context.getSharedPreferences("user", Context.MODE_PRIVATE).edit().putString("token", token).apply()
         response
     }.build()
 

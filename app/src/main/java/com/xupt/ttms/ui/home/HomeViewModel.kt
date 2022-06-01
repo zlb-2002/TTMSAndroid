@@ -3,11 +3,12 @@ package com.xupt.ttms.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.xupt.ttms.data.bean.movieBean.DataSource
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private val _list = MutableLiveData<MutableList<DataSource>>().apply {
+        value = mutableListOf()
     }
-    val text: LiveData<String> = _text
+    val list: LiveData<MutableList<DataSource>> = _list
 }

@@ -40,7 +40,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         return if (username.length == 11) {
             Patterns.PHONE.matcher(username).matches()
         } else {
-            username.isNotBlank()
+            false
         }
     }
 

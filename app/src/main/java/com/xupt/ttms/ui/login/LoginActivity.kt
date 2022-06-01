@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
+            it ?: return@Observer
 
             loading.visibility = View.GONE
 

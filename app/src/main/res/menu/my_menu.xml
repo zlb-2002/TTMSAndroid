@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/my_phone"
+        android:title="手机号"
+        android:icon="@drawable/phone"
+        />
+
+    <item android:id="@+id/my_age"
+        android:title="年龄"
+        android:icon="@drawable/age"
+        />
+
+    <item android:id="@+id/my_gender"
+        android:title="性别"
+        android:icon="@drawable/gender"
+        />
+
+    <item android:id="@+id/my_email"
+        android:title="邮箱"
+        android:icon="@drawable/email"
+        />
+
+    <item android:id="@+id/my_introduction"
+        android:title="介绍"
+        android:icon="@drawable/introduce"
+        />
+
+    <item android:id="@+id/my_balance"
+        android:title="余额"
+        android:icon="@drawable/balance"
+        />
+
+
+
+</menu>
