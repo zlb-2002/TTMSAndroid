@@ -1,10 +1,18 @@
 package com.xupt.ttms.data.source
 
-import android.util.Log
+import android.graphics.Bitmap
 import com.google.gson.Gson
 import com.xupt.ttms.api.my.UserService
+import com.xupt.ttms.data.bean.userBean.user.Data
 import com.xupt.ttms.data.bean.userBean.user.UserResponse
 import com.xupt.ttms.util.retrofit.RetrofitManager
+import com.xupt.ttms.util.tool.StringAndBitmap
+import okhttp3.MediaType.Companion.parse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class UserSource {
 
@@ -17,9 +25,19 @@ class UserSource {
             null
         }
 
-    suspend fun postUserInformation():Boolean = try {
-        Log.d("TAG", "postUserInformation: ${userService.postInformation().data}")
-        userService.postInformation().data
+    suspend fun postUserInformation(data: Data):Boolean = try {
+        userService.postInformation(
+            gson.toJson(data).toRequestBody("application/json".toMediaTypeOrNull())
+        ).data
+    } catch (e:Exception) {
+        false
+    }
+
+    suspend fun postUserPortrait(bitmap:Bitmap):Boolean = try {
+        val file = StringAndBitmap.getFile(bitmap)
+        val body = MultipartBody.Part.createFormData("file", file.name, file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+        )
+        userService.postPortrait(body).data
     } catch (e:Exception) {
         false
     }

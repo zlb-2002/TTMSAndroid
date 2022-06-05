@@ -1,10 +1,10 @@
 package com.xupt.ttms.ui.notifications
 
+import android.graphics.Bitmap
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.xupt.ttms.data.bean.userBean.user.CombineResult
+import com.xupt.ttms.data.bean.userBean.user.Data
 import com.xupt.ttms.data.bean.userBean.user.UserResponse
 import com.xupt.ttms.data.source.UserSource
 import kotlinx.coroutines.launch
@@ -17,8 +17,12 @@ class NotificationsViewModel : ViewModel() {
     private val _isCommit = MutableLiveData<Boolean>()
     val isCommit:LiveData<Boolean> = _isCommit
 
-    private val _commitResult = MutableLiveData<Boolean>()
-    val commitResult:LiveData<Boolean> = _commitResult
+    private val commitInformation = MutableLiveData<Boolean>()
+
+    private val commitPortrait = MutableLiveData<Boolean>()
+
+    private val _commitResult = MediatorLiveData<CombineResult>()
+    val commitResult:LiveData<CombineResult> = createLiveDataMediator()
 
     private val userSource = UserSource()
 
@@ -26,8 +30,22 @@ class NotificationsViewModel : ViewModel() {
         _userInformation.value = userSource.getUserInformation()
     }
 
-    fun postUserInformation() = viewModelScope.launch {
-        _commitResult.value = userSource.postUserInformation()
+    fun postUserInformation(data: Data) = viewModelScope.launch {
+        commitInformation.value = userSource.postUserInformation(data)
+    }
+
+    fun postUserPortrait(bitmap: Bitmap) = viewModelScope.launch {
+        commitInformation.value = userSource.postUserPortrait(bitmap)
+    }
+
+    private fun createLiveDataMediator() :LiveData<CombineResult> {
+        _commitResult.addSource(commitInformation) {
+            _commitResult.value = commitPortrait.value?.let { it1 -> CombineResult(it, it1) }
+        }
+        _commitResult.addSource(commitPortrait) {
+            _commitResult.value = commitInformation.value?.let { it1 -> CombineResult(it, it1) }
+        }
+        return _commitResult
     }
 
     fun nameChange(name:String) {

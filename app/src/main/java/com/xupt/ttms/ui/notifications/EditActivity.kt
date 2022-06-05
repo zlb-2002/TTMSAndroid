@@ -2,23 +2,24 @@ package com.xupt.ttms.ui.notifications
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.InputFilter
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.xupt.ttms.R
@@ -26,30 +27,27 @@ import com.xupt.ttms.databinding.FragmentEditInformationBinding
 import com.xupt.ttms.ui.login.afterTextChanged
 import com.xupt.ttms.util.tool.ToastUtil
 
-class EditInformationFragment : Fragment() {
+class EditActivity : AppCompatActivity() {
 
-
-    private var _binding: FragmentEditInformationBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding:FragmentEditInformationBinding
     private val CHOOSE_PHOTO: Int = 2
-    private val mainViewModel by activityViewModels<EditActivityViewModel>()
+    private val mainViewModel:EditActivityViewModel by lazy { ViewModelProvider(this)[EditActivityViewModel::class.java] }
 
     private val REQUEST_IMAGE_CAPTURE = 1
     private lateinit var bottomSheetDialog:BottomSheetDialog
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEditInformationBinding.inflate(inflater, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_edit)
+
+        binding = FragmentEditInformationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val notificationsViewModel = ViewModelProvider(this)[NotificationsViewModel::class.java]
 
         notificationsViewModel.getUserInformation()
 
-        notificationsViewModel.userInformation.observe(viewLifecycleOwner) {
+        notificationsViewModel.userInformation.observe(this) {
             binding.editName.setText(it?.data?.username)
             binding.editName.setText(it?.data?.age.toString())
             binding.editName.setText(it?.data?.email)
@@ -97,7 +95,7 @@ class EditInformationFragment : Fragment() {
             }
         }
 
-        mainViewModel.bitmap.observe(viewLifecycleOwner){
+        mainViewModel.bitmap.observe(this){
             binding.userPortrait.load(it)
         }
 
@@ -166,29 +164,28 @@ class EditInformationFragment : Fragment() {
             }
         }
 
-        notificationsViewModel.commitResult.observe(viewLifecycleOwner) {
+        notificationsViewModel.commitResult.observe(this) {
             it ?: return@observe
             if (it.information && it.portrait) {
-                findNavController().navigate(R.id.action_editInformationFragment_to_navigation_notifications)
-                ToastUtil.getToast(context, "修改成功")
+                finish()
+                ToastUtil.getToast(this, "修改成功")
             } else if (it.information) {
-                ToastUtil.getToast(context,"修改信息失败")
+                ToastUtil.getToast(this,"修改信息失败")
             } else if (it.portrait) {
-                ToastUtil.getToast(context, "修改头像失败")
+                ToastUtil.getToast(this, "修改头像失败")
             } else {
-                ToastUtil.getToast(context, "修改信息头像失败")
+                ToastUtil.getToast(this, "修改信息头像失败")
             }
         }
 
-        notificationsViewModel.isCommit.observe(viewLifecycleOwner) {
+        notificationsViewModel.isCommit.observe(this) {
             binding.editCommit.isEnabled = it
         }
 
-        return binding.root
     }
 
     private fun dispatchChoosePictureIntent() {
-        if (context?.let {
+        if (this.let {
                 ContextCompat.checkSelfPermission(
                     it,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -196,7 +193,7 @@ class EditInformationFragment : Fragment() {
             } !=
             PackageManager.PERMISSION_GRANTED
         ) {
-            activity?.let { it1 ->
+            this.let { it1 ->
                 ActivityCompat.requestPermissions(
                     it1,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -211,7 +208,7 @@ class EditInformationFragment : Fragment() {
     @SuppressLint("QueryPermissionsNeeded")
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            activity?.packageManager?.let {
+            this.packageManager?.let {
                 takePictureIntent.resolveActivity(it)?.also {
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                 }
@@ -225,9 +222,80 @@ class EditInformationFragment : Fragment() {
         startActivityForResult(intent, CHOOSE_PHOTO)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            mainViewModel.getBitmap(data?.extras?.get("data") as Bitmap)
+        } else if (requestCode == CHOOSE_PHOTO && resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
+
+                data?.let { handleImageOnKitKat(it) }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openAlbum()
+            } else {
+                ToastUtil.getToast(this, "没有获取你的权限")
+            }
+        }
+    }
+
+
+    private fun handleImageOnKitKat(data: Intent) {
+        var imagePath: String? = null
+        val uri = data.data
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            val docId = DocumentsContract.getDocumentId(uri)
+            if ("com.android.providers.media.documents" == uri!!.authority) {
+                val id = docId.split(":".toRegex()).toTypedArray()[1]
+                val selection = MediaStore.Images.Media._ID + "=" + id
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection)
+            } else if ("com.android.providers.media.downloads.documents" == uri.authority) {
+                val contentUri = ContentUris.withAppendedId(
+                    Uri.parse("content://downloads/public_downloads"),
+                    docId.toLong()
+                )
+                imagePath = getImagePath(contentUri, null)
+            }
+        } else if ("content".equals(uri!!.scheme, ignoreCase = true)) {
+            imagePath = getImagePath(uri, null)
+        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
+            imagePath = uri.path
+        }
+        displayImage(imagePath)
+    }
+
+    private fun displayImage(imagePath: String?) {
+        if (imagePath != null) {
+            val bitmap = BitmapFactory.decodeFile(imagePath)
+            mainViewModel.getBitmap(bitmap)
+        } else {
+            ToastUtil.getToast(this, "无法获取图像")
+        }
+    }
+
+    @SuppressLint("Range")
+    private fun getImagePath(externalContentUri: Uri, selection: String?): String? {
+        var path: String? = null
+        val cursor = contentResolver.query(
+            externalContentUri,
+            null, selection, null, null
+        )
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            }
+            cursor.close()
+        }
+        return path
     }
 
 }

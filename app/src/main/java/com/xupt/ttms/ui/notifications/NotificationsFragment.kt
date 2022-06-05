@@ -1,5 +1,6 @@
 package com.xupt.ttms.ui.notifications
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -48,7 +49,7 @@ class NotificationsFragment : Fragment() {
         }
 
         binding.editButton.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_notifications_to_editInformationFragment)
+            startActivity(Intent(activity, EditActivity::class.java))
         }
 
         return binding.root
@@ -57,5 +58,10 @@ class NotificationsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         notificationsViewModel.getUserInformation()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
