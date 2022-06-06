@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -16,16 +15,19 @@ import android.text.InputFilter
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.permissionx.guolindev.PermissionX
 import com.xupt.ttms.R
 import com.xupt.ttms.databinding.FragmentEditInformationBinding
 import com.xupt.ttms.ui.login.afterTextChanged
 import com.xupt.ttms.util.tool.ToastUtil
+
 
 class EditActivity : AppCompatActivity() {
 
@@ -34,7 +36,6 @@ class EditActivity : AppCompatActivity() {
     private val mainViewModel:EditActivityViewModel by lazy { ViewModelProvider(this)[EditActivityViewModel::class.java] }
 
     private val REQUEST_IMAGE_CAPTURE = 1
-    private lateinit var bottomSheetDialog:BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,47 +48,68 @@ class EditActivity : AppCompatActivity() {
 
         notificationsViewModel.getUserInformation()
 
+        PermissionX.init(this)
+            .permissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            .request { allGranted: Boolean, _: List<String?>?, deniedList: List<String?> ->
+                if (allGranted) {
+                    Toast.makeText(this, "所有申请的权限都已通过", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "您拒绝了如下权限：$deniedList", Toast.LENGTH_LONG).show()
+                }
+            }
+
         notificationsViewModel.userInformation.observe(this) {
             binding.editName.setText(it?.data?.username)
-            binding.editName.setText(it?.data?.age.toString())
-            binding.editName.setText(it?.data?.email)
-            binding.editName.setText(it?.data?.introduce)
+            binding.editAge.setText(it?.data?.age.toString())
+            binding.editEmail.setText(it?.data?.email)
+            binding.editIntroduce.setText(it?.data?.introduce)
             when (it?.data?.gender) {
                 "0" -> binding.editGender.setText("男")
                 "1" -> binding.editGender.setText("女")
             }
+            binding.userPortrait.load(notificationsViewModel.userInformation.value?.data?.portrait?.substring(0,4)
+                    + notificationsViewModel.userInformation.value?.data?.portrait?.substring(5)
+            ) {
+                error(R.drawable.user)
+            }
         }
 
         binding.userPortrait.apply {
-            load(notificationsViewModel.userInformation.value?.data?.portrait) {
+            load(notificationsViewModel.userInformation.value?.data?.portrait?.substring(0,4)
+                    + notificationsViewModel.userInformation.value?.data?.portrait?.substring(5)
+            ) {
                 error(R.drawable.user)
             }
             setOnClickListener {
-                bottomSheetDialog = BottomSheetDialog(context, R.style.BottomSheetDialog)
+                val bottomSheetDialog = BottomSheetDialog(this@EditActivity, R.style.BottomSheetDialog)
                 bottomSheetDialog.setCancelable(true)
                 bottomSheetDialog.setContentView(R.layout.layout_bottomsheetdialog_select_photo)
                 bottomSheetDialog.show()
 
-                bottomSheetDialog.window?.findViewById<ImageView>(R.id.image_arrows_select_photo).apply {
+                bottomSheetDialog.window!!.findViewById<ImageView>(R.id.image_arrows_select_photo).apply {
                     setOnClickListener {
                         bottomSheetDialog.cancel()
                     }
                 }
 
-                bottomSheetDialog.window?.findViewById<TextView>(R.id.take_photo).apply {
+                bottomSheetDialog.window!!.findViewById<TextView>(R.id.take_photo).apply {
                     setOnClickListener {
                         Log.d("TAG", "onCreateView: ")
                         dispatchTakePictureIntent()
                         bottomSheetDialog.cancel()
                     }
                 }
-                bottomSheetDialog.window?.findViewById<TextView>(R.id.select_photo).apply {
+                bottomSheetDialog.window!!.findViewById<TextView>(R.id.select_photo).apply {
                     setOnClickListener {
                         dispatchChoosePictureIntent()
                         bottomSheetDialog.cancel()
                     }
                 }
-                bottomSheetDialog.window?.findViewById<TextView>(R.id.select_photo_cancel).apply {
+                bottomSheetDialog.window!!.findViewById<TextView>(R.id.select_photo_cancel).apply {
                     setOnClickListener {
                         bottomSheetDialog.cancel()
                     }
@@ -164,17 +186,28 @@ class EditActivity : AppCompatActivity() {
             }
         }
 
+        notificationsViewModel.commitPortrait.observe(this) {
+            if (it) {
+                notificationsViewModel.success()
+            } else {
+                notificationsViewModel.reset()
+                ToastUtil.getToast(this, "信息上传失败")
+            }
+        }
+
+        notificationsViewModel.commitInformation.observe(this) {
+            if (it) {
+                notificationsViewModel.success()
+            } else {
+                notificationsViewModel.reset()
+                ToastUtil.getToast(this, "头像上传失败")
+            }
+        }
+
         notificationsViewModel.commitResult.observe(this) {
-            it ?: return@observe
-            if (it.information && it.portrait) {
+            if (it == 2) {
                 finish()
                 ToastUtil.getToast(this, "修改成功")
-            } else if (it.information) {
-                ToastUtil.getToast(this,"修改信息失败")
-            } else if (it.portrait) {
-                ToastUtil.getToast(this, "修改头像失败")
-            } else {
-                ToastUtil.getToast(this, "修改信息头像失败")
             }
         }
 

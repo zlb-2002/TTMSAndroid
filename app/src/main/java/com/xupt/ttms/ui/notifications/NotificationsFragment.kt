@@ -41,7 +41,7 @@ class NotificationsFragment : Fragment() {
                 getItem(4).title = "介绍 :${it?.data?.introduce}"
                 getItem(5).title = "余额 :${it?.data?.balance}"
             }
-            binding.userPortrait.load(it?.data?.portrait) {
+            binding.userPortrait.load(it?.data?.portrait?.substring(0,4)+it?.data?.portrait?.substring(5)) {
                 error(R.drawable.user)
             }
 

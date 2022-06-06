@@ -1,6 +1,7 @@
 package com.xupt.ttms.data.source
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.google.gson.Gson
 import com.xupt.ttms.api.my.UserService
 import com.xupt.ttms.data.bean.userBean.user.Data
@@ -37,6 +38,7 @@ class UserSource {
         val file = StringAndBitmap.getFile(bitmap)
         val body = MultipartBody.Part.createFormData("file", file.name, file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
         )
+        Log.d("TAG", "postUserPortrait: ${userService.postPortrait(body).data}")
         userService.postPortrait(body).data
     } catch (e:Exception) {
         false

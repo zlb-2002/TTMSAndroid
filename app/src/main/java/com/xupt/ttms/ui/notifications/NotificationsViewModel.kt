@@ -17,12 +17,14 @@ class NotificationsViewModel : ViewModel() {
     private val _isCommit = MutableLiveData<Boolean>()
     val isCommit:LiveData<Boolean> = _isCommit
 
-    private val commitInformation = MutableLiveData<Boolean>()
+    private val _commitInformation = MutableLiveData<Boolean>()
+    val commitInformation:LiveData<Boolean> = _commitInformation
 
-    private val commitPortrait = MutableLiveData<Boolean>()
+    private val _commitPortrait = MutableLiveData<Boolean>()
+    val commitPortrait:LiveData<Boolean> = _commitPortrait
 
-    private val _commitResult = MediatorLiveData<CombineResult>()
-    val commitResult:LiveData<CombineResult> = createLiveDataMediator()
+    private val _commitResult = MutableLiveData(0)
+    val commitResult:LiveData<Int> = _commitResult
 
     private val userSource = UserSource()
 
@@ -31,22 +33,13 @@ class NotificationsViewModel : ViewModel() {
     }
 
     fun postUserInformation(data: Data) = viewModelScope.launch {
-        commitInformation.value = userSource.postUserInformation(data)
+        _commitInformation.value = userSource.postUserInformation(data)
     }
 
     fun postUserPortrait(bitmap: Bitmap) = viewModelScope.launch {
-        commitInformation.value = userSource.postUserPortrait(bitmap)
+        _commitInformation.value = userSource.postUserPortrait(bitmap)
     }
 
-    private fun createLiveDataMediator() :LiveData<CombineResult> {
-        _commitResult.addSource(commitInformation) {
-            _commitResult.value = commitPortrait.value?.let { it1 -> CombineResult(it, it1) }
-        }
-        _commitResult.addSource(commitPortrait) {
-            _commitResult.value = commitInformation.value?.let { it1 -> CombineResult(it, it1) }
-        }
-        return _commitResult
-    }
 
     fun nameChange(name:String) {
         _userInformation.value?.data?.username = name
@@ -77,6 +70,14 @@ class NotificationsViewModel : ViewModel() {
         val data = userInformation.value?.data
         _isCommit.value = data?.email != null && data.gender != null && data.username != "未命名用户"
         Log.d("TAG", "isCommit: $data")
+    }
+
+    fun success() {
+        _commitResult.value = _commitResult.value?.plus(1)
+    }
+
+    fun reset() {
+        _commitResult.value = 0
     }
 
 }
