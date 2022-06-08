@@ -8,4 +8,9 @@ import com.xupt.ttms.data.bean.movieBean.DataSource
 class InformationViewModel: ViewModel() {
     private val _dataSource = MutableLiveData<DataSource>()
     val dataSource: LiveData<DataSource> = _dataSource
+
+    fun getDataSource(dataSource: DataSource) {
+        _dataSource.value = dataSource
+    }
+
 }

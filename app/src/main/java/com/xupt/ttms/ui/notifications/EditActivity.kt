@@ -136,6 +136,14 @@ class EditActivity : AppCompatActivity() {
             }
 
             afterTextChanged {
+                if (it.contains("-")) {
+                    this.setText(notificationsViewModel.userInformation.value?.data?.age.toString())
+                    return@afterTextChanged
+                }
+                if (it.contains("+")) {
+                    this.setText(notificationsViewModel.userInformation.value?.data?.age.toString())
+                    return@afterTextChanged
+                }
                 if (it != "") {
                     notificationsViewModel.ageChange(Integer.parseInt(it))
                 }
@@ -179,9 +187,13 @@ class EditActivity : AppCompatActivity() {
                     userInformation.value?.data?.let { it1 ->
                         notificationsViewModel.postUserInformation(it1)
                     }
-                    binding.userPortrait.isDrawingCacheEnabled = true
-                    notificationsViewModel.postUserPortrait(binding.userPortrait.drawingCache)
-                    binding.userPortrait.isDrawingCacheEnabled = false
+                    try {
+                        binding.userPortrait.isDrawingCacheEnabled = true
+                        notificationsViewModel.postUserPortrait(binding.userPortrait.drawingCache)
+                        binding.userPortrait.isDrawingCacheEnabled = false
+                    } catch (e:Exception) {
+                        finish()
+                    }
                 }
             }
         }

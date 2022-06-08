@@ -8,7 +8,6 @@ import retrofit2.http.QueryMap
 interface MovieService {
 
     @GET("movie/getList")
-    @FormUrlEncoded
     suspend fun getMovieList(@QueryMap map:HashMap<String, String>):MovieResponse
 
 }

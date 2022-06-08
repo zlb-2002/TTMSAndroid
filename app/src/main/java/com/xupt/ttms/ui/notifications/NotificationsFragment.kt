@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import coil.load
 import com.xupt.ttms.R
 import com.xupt.ttms.databinding.FragmentNotificationsBinding
@@ -40,6 +39,10 @@ class NotificationsFragment : Fragment() {
                 getItem(3).title = "邮箱 :${it?.data?.email}"
                 getItem(4).title = "介绍 :${it?.data?.introduce}"
                 getItem(5).title = "余额 :${it?.data?.balance}"
+                getItem(5).setOnMenuItemClickListener { _ ->
+                    startActivity(Intent(context, PayActivity::class.java).putExtra("userId", it?.data?.userId))
+                    true
+                }
             }
             binding.userPortrait.load(it?.data?.portrait?.substring(0,4)+it?.data?.portrait?.substring(5)) {
                 error(R.drawable.user)

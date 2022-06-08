@@ -44,4 +44,10 @@ class LoginDataSource {
         }
     }
 
+    suspend fun isLogin() = try {
+        loginService.isLogin().data
+    } catch (e:Exception) {
+        false
+    }
+
 }

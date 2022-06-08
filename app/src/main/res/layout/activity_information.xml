@@ -13,31 +13,32 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/info_toolbar"
         app:navigationIcon="@drawable/back"
+        android:background="@color/theme"
         />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buy_ticket"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/info_toolbar"
-        app:layout_constraintBottom_toTopOf="@id/buy_ticket"
-        android:id="@+id/scroll_view"
-        >
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
+
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="100dp"
                 android:layout_height="160dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.154"
+                app:layout_constraintHorizontal_bias="0.096"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.431"
+                app:layout_constraintVertical_bias="0.227"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -45,22 +46,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="386dp" />
+                app:layout_constraintGuide_begin="314dp" />
 
             <TextView
                 android:id="@+id/info_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:text="电影名称"
                 android:textColor="#000000"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.281"
+                app:layout_constraintHorizontal_bias="0.301"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.245" />
+                app:layout_constraintVertical_bias="0.117" />
 
             <TextView
                 android:id="@+id/info_type"
@@ -77,18 +79,16 @@
 
             <TextView
                 android:id="@+id/info_actor"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
                 android:text="演员"
                 android:textColor="#100E0E"
                 android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.044"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/info_type"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
             <TextView
                 android:id="@+id/info_area"
@@ -116,7 +116,7 @@
                 app:layout_constraintVertical_bias="0.41" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/info_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="价格"
@@ -125,10 +125,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.613"
+                app:layout_constraintHorizontal_bias="0.625"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/info_area"
-                app:layout_constraintVertical_bias="0.467" />
+                app:layout_constraintVertical_bias="0.116" />
 
             <TextView
                 android:id="@+id/info_len"
@@ -151,10 +151,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
 
-
             <TextView
                 android:id="@+id/info_introduction"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="60dp"

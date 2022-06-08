@@ -4,14 +4,14 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.google.gson.Gson
 import com.xupt.ttms.api.my.UserService
+import com.xupt.ttms.data.bean.userBean.login.LoginResponse
 import com.xupt.ttms.data.bean.userBean.user.Data
+import com.xupt.ttms.data.bean.userBean.user.PayRequest
 import com.xupt.ttms.data.bean.userBean.user.UserResponse
 import com.xupt.ttms.util.retrofit.RetrofitManager
 import com.xupt.ttms.util.tool.StringAndBitmap
-import okhttp3.MediaType.Companion.parse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
@@ -44,5 +44,10 @@ class UserSource {
         false
     }
 
+    suspend fun postPay(request: PayRequest):LoginResponse? = try {
+        userService.postPay(gson.toJson(request).toRequestBody("application/json".toMediaTypeOrNull()))
+    } catch (e:Exception) {
+        null
+    }
 
 }

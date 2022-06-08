@@ -5,6 +5,7 @@ import com.xupt.ttms.data.bean.userBean.login.LoginResponse
 import okhttp3.Call
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 
@@ -15,5 +16,8 @@ interface LoginService {
 
     @POST("user/login/judgeCode")
     suspend fun judgeCode(@Body body: RequestBody):LoginResponse
+
+    @GET("user/test")
+    suspend fun isLogin():LoginResponse
 
 }

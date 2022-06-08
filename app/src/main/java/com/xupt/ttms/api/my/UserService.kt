@@ -22,4 +22,7 @@ interface UserService {
     @Multipart
     suspend fun postPortrait(@Part body: MultipartBody.Part): LoginResponse
 
+    @POST("user/addBalance")
+    suspend fun postPay(@Body body: RequestBody):LoginResponse
+
 }
