@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:title="数量"
+            android:id="@+id/good_number"
+            />
+            <item
+            android:title="电影名称"
+            android:id="@+id/good_name"
+            />
+            <item
+            android:title="演出厅"
+            android:id="@+id/good_studio"
+            />
+            <item
+            android:title="开始时间"
+            android:id="@+id/good_start"
+            />
+            <item
+            android:title="结束时间"
+            android:id="@+id/good_end"
+            />
+    </group>
+</menu>

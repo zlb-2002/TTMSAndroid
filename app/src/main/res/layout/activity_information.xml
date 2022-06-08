@@ -98,37 +98,34 @@
                 android:text="地区"
                 app:layout_constraintBottom_toTopOf="@+id/info_actor"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.165"
+                app:layout_constraintHorizontal_bias="0.213"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/info_type"
-                app:layout_constraintVertical_bias="0.369" />
+                app:layout_constraintVertical_bias="0.169" />
 
             <TextView
                 android:id="@+id/info_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="语言"
-                app:layout_constraintBottom_toTopOf="@+id/info_actor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.255"
-                app:layout_constraintStart_toEndOf="@+id/info_area"
-                app:layout_constraintTop_toBottomOf="@+id/info_type"
-                app:layout_constraintVertical_bias="0.41" />
+                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintStart_toStartOf="@+id/info_area"
+                app:layout_constraintTop_toBottomOf="@+id/info_area"
+                app:layout_constraintVertical_bias="0.265" />
 
             <TextView
                 android:id="@+id/info_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="72dp"
                 android:text="价格"
                 android:textColor="@color/purple_200"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.625"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/info_area"
-                app:layout_constraintVertical_bias="0.116" />
+                app:layout_constraintHorizontal_bias="0.143"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/info_len"
@@ -137,8 +134,10 @@
                 android:text="时长"
                 app:layout_constraintBottom_toBottomOf="@+id/info_type"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.144"
                 app:layout_constraintStart_toEndOf="@+id/info_type"
-                app:layout_constraintTop_toTopOf="@+id/info_type" />
+                app:layout_constraintTop_toTopOf="@+id/info_type"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/info_date"

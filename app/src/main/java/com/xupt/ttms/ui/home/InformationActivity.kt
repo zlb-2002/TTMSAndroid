@@ -9,6 +9,8 @@ import com.xupt.ttms.R
 import com.xupt.ttms.data.bean.movieBean.DataSource
 import com.xupt.ttms.databinding.ActivityInformationBinding
 import com.xupt.ttms.util.tool.ListUtil.myString
+import java.text.DateFormat
+import java.util.*
 
 class InformationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +31,13 @@ class InformationActivity : AppCompatActivity() {
 
             binding.infoToolbar.title = it.title
             binding.infoName.text = it.title
-            binding.infoArea.text = it.area?.myString()
-            binding.infoActor.text = it.actor?.myString()
+            binding.infoArea.text = "国家：${it.area?.myString()}"
+            binding.infoActor.text = "演员：${it.actor?.myString()}"
             binding.infoType.text = it.type?.myString()
-            binding.infoLanguage.text = it.language?.myString()
-            binding.infoLen.text = it.filmlen.toString()
-            binding.infoDate.text = it.releaseDate.toString()
-            binding.infoIntroduction.text = it.introduction
+            binding.infoLanguage.text = "语言：${it.language?.myString()}"
+            binding.infoLen.text = "${it.filmlen.toString()}分钟"
+            binding.infoDate.text = DateFormat.getDateInstance(DateFormat.SHORT, Locale.CHINA).format(it.releaseDate)
+            binding.infoIntroduction.text = "介绍：${it.introduction}"
             binding.infoPrice.text = it.rate.toString()
 
             binding.imageView2.load(it.cover) {
