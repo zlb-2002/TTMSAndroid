@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.xupt.ttms.data.bean.order.Data
 import com.xupt.ttms.data.bean.order.Ticket
@@ -24,6 +25,7 @@ class OrderActivity : AppCompatActivity() {
 
         val orderViewModel = ViewModelProvider(this)[OrderViewModel::class.java]
         orderViewModel.order.observe(this){
+            Log.d("TAG", "onCreate: $it")
             binding.materialToolbar.title = "详细订单"
             binding.orderId.text="订单号:${it.orderId}"
             binding.payTime.text = "支付时间:${DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT,
@@ -41,9 +43,18 @@ class OrderActivity : AppCompatActivity() {
             binding.seat.text = it.tickets?.let { it1 -> getSeat(it1) }
             binding.orderStatus.text = when(it.orderStatus) {
                 1 -> "有效"
-                -1 -> "退款"
-                0 -> "无效"
-                else -> ""
+                -1 -> {
+                    binding.returnButton.visibility = View.GONE
+                    "退款"
+                }
+                0 -> {
+                    binding.returnButton.visibility = View.GONE
+                    "无效"
+                }
+                else -> {
+                    binding.returnButton.visibility = View.GONE
+                    ""
+                }
             }
         }
         intent.getParcelableExtra<Data>("data")?.let { orderViewModel.setData(it) }
@@ -52,7 +63,6 @@ class OrderActivity : AppCompatActivity() {
         }
 
         orderViewModel.reverseOrder.observe(this) {
-            Log.d("TAG", "onCreate: $it")
             ToastUtil.getToast(this, it.msg)
             if (it.data) {
                 finish()

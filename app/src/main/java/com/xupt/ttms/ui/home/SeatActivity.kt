@@ -27,7 +27,8 @@ class SeatActivity : AppCompatActivity() {
 
         binding.commitButton.apply {
             setOnClickListener {
-                seatViewModel.getTicket()
+                getSharedPreferences("user", MODE_PRIVATE).getString("phone", "")
+                    ?.let { it1 -> seatViewModel.getTicket(it1) }
             }
         }
 

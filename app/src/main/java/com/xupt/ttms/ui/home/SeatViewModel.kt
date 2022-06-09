@@ -1,6 +1,5 @@
 package com.xupt.ttms.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,14 +8,11 @@ import com.xupt.ttms.data.bean.scheduleBean.BuyTicketRequest
 import com.xupt.ttms.data.bean.scheduleBean.BuyTicketResponse
 import com.xupt.ttms.data.bean.scheduleBean.Schedule
 import com.xupt.ttms.data.bean.studioBean.Ticket
-import com.xupt.ttms.data.bean.studioBean.TicketResponse
 import com.xupt.ttms.data.source.ScheduleSource
 import com.xupt.ttms.util.tool.SeatUtil
 import kotlinx.coroutines.launch
 
 class SeatViewModel :ViewModel() {
-
-    private val TAG = "TAG"
 
     private val _seat = MutableLiveData<MutableList<Ticket>>()
     val seat:LiveData<MutableList<Ticket>> = _seat
@@ -70,12 +66,12 @@ class SeatViewModel :ViewModel() {
         _ticketPrice.value = ticketPrice.value !!- schedule.value!!.ticketPrice
     }
 
-    fun getTicket() {
+    fun getTicket(phone:String) {
         val list = mutableListOf<Int>()
         checkList.value?.forEach { list.add(it.ticketId) }
         val ticket = schedule.value?.scheduleId?.let {
             BuyTicketRequest( list.toList(),
-                it, "18391072615")
+                it, phone)
         }
         _ticketRequest.value = ticket
     }

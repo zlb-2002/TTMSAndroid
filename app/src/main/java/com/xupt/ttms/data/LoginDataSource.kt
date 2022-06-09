@@ -5,21 +5,17 @@ import com.xupt.ttms.api.login.LoginService
 import com.xupt.ttms.data.bean.userBean.login.CodeRequest
 import com.xupt.ttms.data.bean.userBean.login.LoginRequest
 import com.xupt.ttms.util.retrofit.RetrofitManager
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class LoginDataSource {
 
     private val loginService = RetrofitManager.createLoginService(LoginService::class.java)
+    private val isLoginService = RetrofitManager.createService(LoginService::class.java)
     private val gson = Gson()
 
     suspend fun login(username: String, password: String): Boolean {
         return requestLogin(username, password)
-    }
-
-    fun logout() {
-        // TODO: revoke authentication
     }
 
     suspend fun getCode(phone: String): Boolean {
@@ -28,7 +24,10 @@ class LoginDataSource {
 
     private suspend fun requestCode (phone: String) :Boolean {
         return try {
-            val result = loginService.getCode(RequestBody.create("application/json".toMediaTypeOrNull(),gson.toJson(CodeRequest(phone))))
+            val result = loginService.getCode(
+                gson.toJson(CodeRequest(phone))
+                    .toRequestBody("application/json".toMediaTypeOrNull())
+            )
             result.data
         } catch (e:Exception) {
             false
@@ -37,7 +36,10 @@ class LoginDataSource {
 
     private suspend fun requestLogin(phone:String, code:String) :Boolean {
         return try{
-            val result = loginService.judgeCode(RequestBody.create("application/json".toMediaTypeOrNull(), gson.toJson(LoginRequest(phone, code))))
+            val result = loginService.judgeCode(
+                gson.toJson(LoginRequest(phone, code))
+                    .toRequestBody("application/json".toMediaTypeOrNull())
+            )
             result.data
         } catch (e: Exception) {
             false
@@ -45,7 +47,7 @@ class LoginDataSource {
     }
 
     suspend fun isLogin() = try {
-        loginService.isLogin().data
+        isLoginService.isLogin().data
     } catch (e:Exception) {
         false
     }

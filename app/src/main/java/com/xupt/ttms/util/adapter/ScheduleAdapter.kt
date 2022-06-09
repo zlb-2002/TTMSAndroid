@@ -30,8 +30,8 @@ class ScheduleAdapter(private val list: MutableList<Schedule>): RecyclerView.Ada
         val schedule = list[position]
         holder.studioName.text = schedule.studioName
         holder.movieName.text = schedule.movieName
-        holder.startTime.text = DateFormat.getDateInstance(DateFormat.SHORT, Locale.CHINA).format(schedule.startTime)
-        holder.endTime.text = DateFormat.getDateInstance(DateFormat.SHORT, Locale.CHINA).format(schedule.endTime)
+        holder.startTime.text = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT, Locale.CHINA).format(schedule.startTime)
+        holder.endTime.text = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT, Locale.CHINA).format(schedule.endTime)
         holder.price.text = schedule.ticketPrice.toString()
         holder.view.setOnClickListener {
             context.startActivity(Intent(context, SeatActivity::class.java).putExtra("schedule", schedule))

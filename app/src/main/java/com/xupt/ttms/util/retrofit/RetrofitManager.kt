@@ -20,7 +20,6 @@ object RetrofitManager {
                 context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("token", "")!!
             )
             .build()
-        Log.d("TAG", ": ${context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("token", "")!!}")
         chain.proceed(request)
     }.build()
 
@@ -28,7 +27,6 @@ object RetrofitManager {
         val response = chain.proceed(chain.request())
         val token = response.header("token", "")
         context.getSharedPreferences("user", Context.MODE_PRIVATE).edit().putString("token", token).apply()
-        Log.d("TAG", ": ${context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("token", "")!!}")
         response
     }.build()
 

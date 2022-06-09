@@ -45,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
-            // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
@@ -65,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (it) {
                 setResult(Activity.RESULT_OK)
+                savePhone()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
@@ -126,6 +126,10 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
+    }
+
+    private fun savePhone() {
+        getSharedPreferences("user", MODE_PRIVATE).edit().putString("phone", binding.username.text.toString()).apply()
     }
 
 }
