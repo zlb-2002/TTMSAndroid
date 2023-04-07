@@ -1,5 +1,6 @@
 package com.xupt.ttms.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import java.text.DateFormat
 import java.util.*
 
 class InformationActivity : AppCompatActivity() {
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityInformationBinding.inflate(layoutInflater)
